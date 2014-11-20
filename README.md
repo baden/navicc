@@ -5,7 +5,7 @@ GPS tracker server for new.navi.cc project.
 
 #### To build the project:
 
-    make rel
+    make
 
 #### To test the project:
 
