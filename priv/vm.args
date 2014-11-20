@@ -1,0 +1,47 @@
+
+# +K true +P 1000000
+# -config priv/app.config
+# -name erlnavicc@bigbrother
+# -s erlnavicc
+# -setcookie 123
+# -sasl sasl_error_logger false
+#
+# -extra
+# Each node in the system must have a unique name. We recommend running with
+# -name and a fqdn
+#-sname erlnavicc
+-name navicc@bigbrother.com
+#-name erlnavicc2@bigbrother
+#-name erlnavicc2@127.0.0.1
+
+# Inter-node communication requires each node to have the same cookie
+# Comment this line out if you use ~/.erlang.cookie to manage your cookie
+# file
+-setcookie 123
+
+# Parametrized node name with default value
+# ${NL}-name erdico@${FQDN}
+# ${NL}-extra
+# -sname mini-clustergps
+
+## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
+## (Disabled by default..use with caution!)
+#-heart
+
+# Use kernel poll functionality if supported by emulator
++K true
+
++P 1000000
+
+# Start a pool of asynchronous IO threads
+# +A 8
+
+# Comment this line out if you want the Erlang shell
+# +Bd
+
+-mnesia dir '"mnesia"'
+
+# Limit the size of error reports
+-riak_err term_max_size 8192 fmt_max_bytes 9000
+
+-s observer
