@@ -38,7 +38,7 @@ dep_navistats = git git://github.com/baden/navistats.git master
 
 # RELX_OPTS = -o rel release tar
 # RELX_OUTPUT_DIR = rel
-# RELX_OPTS = -o rel
+RELX_OPTS = -o _rel release tar
 
 include erlang.mk
 
