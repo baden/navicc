@@ -19,3 +19,5 @@ deploy:
       - "_rel/navicc_release/navicc_release-0.0.1.tar.gz"
   on:
     repo: baden/navicc
+    all_branches: true
+    tags: true
