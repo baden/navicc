@@ -1,0 +1,34 @@
+#
+# Each node in the system must have a unique name. We recommend running with
+# -name and a fqdn
+-sname navicc
+#-name navicc@bigbrother
+#-name navicc@localhost
+#-name erlnavicc2@bigbrother
+#-name erlnavicc2@127.0.0.1
+
+# Inter-node communication requires each node to have the same cookie
+# Comment this line out if you use ~/.erlang.cookie to manage your cookie
+# file
+-setcookie 123
+
+## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
+## (Disabled by default..use with caution!)
+#-heart
+
+# Use kernel poll functionality if supported by emulator
+## Enable kernel poll and a few async threads
++K true
++A 64
++P 262144
+
+## enable smp support
+-smp auto
+
+## Increase number of concurrent ports/sockets
+-env ERL_MAX_PORTS 16384
+
+## Tweak GC to run more often
+-env ERL_FULLSWEEP_AFTER 10
+
+-mnesia dir '"/var/lib/navicc"'

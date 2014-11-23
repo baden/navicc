@@ -1,7 +1,8 @@
 %%-*- mode: erlang -*-
 {application, navicc, [
   {description, "NewGps.navi.cc server"},
-  {id, "ErlangNaviCC"},
+  % {id, "ErlangNaviCC"},
+  {id, "git"},
   {vsn, "0.0.1"},
   {modules, []},                % here erlang.mk inserts all application modules, not added automatically, required by relx
   % {registered, []},    % require by relx (???)

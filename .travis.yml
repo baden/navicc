@@ -1,7 +1,7 @@
 language: erlang
-otp_release:
-  - 17.3
-script: "sleep 4 && make tests"
+otp_release: 17.3
+script:
+  - sh -c "if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
 branches:
   only:
     - master
@@ -10,3 +10,14 @@ notifications:
     - baden.i.ua@gmail.com
 services:
   - mongodb
+deploy:
+  provider: releases
+  api_key:
+    secure: XZnfBA6LQuIHha22FAdDhyOT+ItPcz9I8vZKwtQW4dBJVSj1irxlsv96vbHinVj8jjOXVSpOXJrF4kByptP+yoTTo5YyuHiovLm4kL5ZTBUDKzz4ftLy5BmsL1aiGo2VTJAblyZgyPjh12RRs3m79NwJtCRxGif/b46Ahkafl5E=
+  file:
+    - "rel/switchboard/switchboard-${TRAVIS_TAG}.tar.gz"
+    - "rel/switchboard/switchboard_${TRAVIS_TAG}_amd64.deb"
+  on:
+    repo: baden/navicc
+    all_branches: true
+    tags: true
