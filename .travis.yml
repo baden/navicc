@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
-  file: "deploy/*"
+  file: "deploy/navicc_release_${TRAVIS_TAG}.dep"
   skip_cleanup: true
   on:
     repo: baden/navicc
@@ -27,4 +27,5 @@ deploy:
     tags: true
 before_deploy:
   - make deb
+  - ls deploy
 after_deploy: "echo 'after deploy'"
