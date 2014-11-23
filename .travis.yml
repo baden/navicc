@@ -25,5 +25,6 @@ deploy:
     repo: baden/navicc
     all_branches: true
     tags: true
-before_deploy: "echo 'before deploy'"
+before_deploy:
+  - make deb
 after_deploy: "echo 'after deploy'"
