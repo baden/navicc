@@ -1,10 +1,10 @@
 language: erlang
 otp_release: 17.3
 script:
-- sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel deb; fi"
-branches:
-  only:
-  - master
+  # - sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
+  - make tests
+after_success:
+  - make rel
 notifications:
   email:
   - baden.i.ua@gmail.com
@@ -14,9 +14,7 @@ deploy:
   provider: releases
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
-  file:
-      - "deploy/*"
-      - "_rel/navicc_release/*.tar.gz"
+  file: "deploy/*"
   skip_cleanup: true
   on:
     repo: baden/navicc
