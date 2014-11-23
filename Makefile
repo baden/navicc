@@ -86,7 +86,7 @@ deb:
 	mkdir -p $(CURDIR)/deploy
 
 	fpm -s dir -t deb -f -n $(RELEASE_NAME) -v $(RELEASE_VER) \
-		-p deploy/$(RELEASE_NAME)_$(RELEASE_VER).dep \
+		-p deploy/$(RELEASE_NAME)_$(RELEASE_VER)_amd64.deb \
 		--after-install $(CURDIR)/etc/postinst \
 		--after-remove  $(CURDIR)/etc/postrm \
 		--config-files /etc/$(PROJECT)/sys.config \
@@ -98,4 +98,4 @@ deb:
 
 publish:
 	# @ssh $(server) "mkdir -p navicc" && scp rel/$(RELEASE_NAME)/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz $(server):~/navicc/
-	scp navicc-release_0.0.1_amd64.deb $(server):~
+	scp deploy/*.deb $(server):~

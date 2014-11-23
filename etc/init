@@ -17,7 +17,7 @@ DESC="GPS Tracking"
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 BASE_DIR=/opt/$NAME
 DAEMON=$BASE_DIR/bin/$RELEASE
-CONGIF_ROOT=/etc/$NAME/
+CONGIF_DIR=/etc/$NAME
 SCRIPTNAME=/etc/init.d/$NAME
 USER=$NAME
 
@@ -33,6 +33,8 @@ ERTS_PATH=$BASE_DIR/erts-$ERTS_VSN/bin
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
 
+export VMARGS_PATH=$CONGIF_DIR/vm.args
+export CONFIG_PATH=$CONGIF_DIR/sys.config
 #
 # Function that starts the daemon/service
 #
@@ -46,11 +48,10 @@ do_start()
 	RETVAL=`$DAEMON ping`
 	[ "$RETVAL" = "pong" ] && return 1
 
-	su - $USER -c "VMARGS_PATH=$CONGIF_ROOT/vm.args CONFIG_PATH=$CONGIF_ROOT/ $DAEMON/sys.config start" || return 2
+	su - $USER -c "$DAEMON start" || return 2
 }
 
-#
-# Function that stops the daemon/service
+## Function that stops the daemon/service
 #
 do_stop()
 {

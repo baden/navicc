@@ -7,6 +7,7 @@ install:
 script:
   # - sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
   - echo "TRAVIS_TAG=[$TRAVIS_TAG]"
+  - uname -a
   - make tests
 after_success:
   - make rel
@@ -20,7 +21,7 @@ deploy:
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
   file:
-    - deploy/navicc_release_${TRAVIS_TAG}.dep
+    - deploy/navicc_release_${TRAVIS_TAG}.deb
     - _rel/navicc_release/navicc_release-${TRAVIS_TAG}.tar.gz
   skip_cleanup: true
   on:
