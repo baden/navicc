@@ -1,7 +1,7 @@
 language: erlang
 otp_release: 17.3
 script:
-- sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
+- sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel deb; fi"
 branches:
   only:
   - master
@@ -9,15 +9,18 @@ notifications:
   email:
   - baden.i.ua@gmail.com
 services:
-- mongodb
+  - mongodb
 deploy:
   provider: releases
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
   file:
-      - "navicc-release_0.0.1_amd64.deb"
-      - "_rel/navicc_release/navicc_release-0.0.1.tar.gz"
+      - "deploy/*"
+      - "_rel/navicc_release/*.tar.gz"
+  skip_cleanup: true
   on:
     repo: baden/navicc
     all_branches: true
     tags: true
+before_deploy: "echo 'before deploy'"
+after_deploy: "echo 'after deploy'"

@@ -83,7 +83,10 @@ deb:
 	install -m644 $(CURDIR)/etc/vm.args               $(PACKAGE_DIR)/etc/$(PROJECT)/vm.args
 
 	# fpm -s dir -t deb -n $(RELEASE_NAME) -v $(RELEASE_VER) .=/opt/$(RELEASE_NAME)
+	mkdir -p $(CURDIR)/deploy
+
 	fpm -s dir -t deb -f -n $(RELEASE_NAME) -v $(RELEASE_VER) \
+		-p deploy/$(RELEASE_NAME)_$(RELEASE_VER).dep \
 		--after-install $(CURDIR)/etc/postinst \
 		--after-remove  $(CURDIR)/etc/postrm \
 		--config-files /etc/$(PROJECT)/sys.config \
