@@ -1,7 +1,12 @@
 language: erlang
 otp_release: 17.3
+install:
+  # - sh -c "if ! [ -z '$TRAVIS_TAG' ]; then sudo apt-get install ruby-dev rubygems; gem install fpm; fi"
+  - sudo apt-get install ruby-dev rubygems
+  - gem install fpm
 script:
   # - sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
+  - echo "TRAVIS_TAG=[$TRAVIS_TAG]"
   - make tests
 after_success:
   - make rel
