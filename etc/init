@@ -13,12 +13,11 @@
 NAME=navicc
 RELEASE=navicc_release
 DESC="GPS Tracking"
-VMARGS_PATH=/etc/$NAME/vm.args
-CONFIG_PATH=/etc/$NAME/sys.config
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 BASE_DIR=/opt/$NAME
 DAEMON=$BASE_DIR/bin/$RELEASE
+CONGIF_ROOT=/etc/$NAME/
 SCRIPTNAME=/etc/init.d/$NAME
 USER=$NAME
 
@@ -47,7 +46,7 @@ do_start()
 	RETVAL=`$DAEMON ping`
 	[ "$RETVAL" = "pong" ] && return 1
 
-	su - $USER -c "$DAEMON start" || return 2
+	su - $USER -c "VMARGS_PATH=$CONGIF_ROOT/vm.args CONFIG_PATH=$CONGIF_ROOT/ $DAEMON/sys.config start" || return 2
 }
 
 #
