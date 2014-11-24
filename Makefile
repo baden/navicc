@@ -12,7 +12,12 @@ $(eval RELEASE_NAME := $(shell \
 	grep -o ' {.*, "' | \
 	grep -o '[^ {,"]*'))
 
-RELEASE_VER := `git describe --tags --long`
+ifdef TRAVIS_TAG
+RELEASE_VER=$(TRAVIS_TAG)
+else
+RELEASE_VER:=`git describe --tags --long`
+endif
+
 # $(eval RELEASE_VER := $(shell \
 # 	grep -E '^[^%]*{navicc_release,[[:space:]]*".*"' relx.config | \
 # 	grep -o '".*"' | \

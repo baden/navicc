@@ -25,7 +25,8 @@ deploy:
   provider: releases
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
-  file: "deploy/navicc-server_`git describe --tags --long`_amd64.deb"
+  # file: "deploy/navicc-server_`git describe --tags --long`_amd64.deb"
+  file: "deploy/navicc-server_$TRAVIS_TAG_amd64.deb"
   skip_cleanup: true
   on:
     repo: baden/navicc
