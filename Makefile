@@ -15,7 +15,8 @@ $(eval RELEASE_NAME := $(shell \
 ifdef TRAVIS_TAG
 RELEASE_VER=$(TRAVIS_TAG)
 else
-RELEASE_VER:=`git describe --tags --long`
+# RELEASE_VER:=`git describe --tags HEAD`
+RELEASE_VER:=`git describe --tags --long HEAD`
 endif
 
 # $(eval RELEASE_VER := $(shell \

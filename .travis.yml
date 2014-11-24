@@ -1,7 +1,10 @@
 language: erlang
 otp_release: 17.3
 before_install:
-  - sudo apt-get install git-buildpackage
+  - echo $TRAVIS_BRANCH
+  - echo $TRAVIS_TAG
+  - echo $env.CI_DEPLOY_USERNAME
+  # - sudo apt-get install git-buildpackage
 install:
   # - sh -c "if ! [ -z '$TRAVIS_TAG' ]; then sudo apt-get install ruby-dev rubygems; gem install fpm; fi"
   # - sudo apt-get install ruby-dev rubygems
@@ -26,7 +29,7 @@ deploy:
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
   # file: "deploy/navicc-server_`git describe --tags --long`_amd64.deb"
-  file: "deploy/navicc-server_$TRAVIS_TAG_amd64.deb"
+  file: deploy/navicc-server_${TRAVIS_TAG}_amd64.deb
   skip_cleanup: true
   on:
     repo: baden/navicc
