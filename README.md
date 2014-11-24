@@ -1,4 +1,4 @@
-navicc
+navicc [![Build Status](https://travis-ci.org/baden/navicc.png)](https://travis-ci.org/baden/navicc)
 ======
 
 GPS tracker server for new.navi.cc project.

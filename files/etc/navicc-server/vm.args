@@ -21,6 +21,13 @@
 ## Increase number of concurrent ports/sockets
 -env ERL_MAX_PORTS 16384
 
+# From rabbitmq and benchmarks:
+# +P 1048576
+# -kernel inet_default_connect_options '[{nodelay,true}]'
+# +h 99999
+# -kernel inet_default_connect_options [{nodelay,false},{recbuf,1024000},{sndbuf,10240000}]
+# -kernel inet_default_listen_options [{nodelay,false},{recbuf,1024000},{sndbuf,10240000}]"
+
 ## Tweak GC to run more often
 -env ERL_FULLSWEEP_AFTER 10
 
