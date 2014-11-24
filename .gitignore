@@ -18,3 +18,5 @@ _rel/
 /build/
 *.deb
 deploy/
+relx
+

@@ -1,39 +1,59 @@
 #!/bin/sh
-##  The contents of this file are subject to the Mozilla Public License
-##  Version 1.1 (the "License"); you may not use this file except in
-##  compliance with the License. You may obtain a copy of the License
-##  at http://www.mozilla.org/MPL/
-##
-##  Software distributed under the License is distributed on an "AS IS"
-##  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
-##  the License for the specific language governing rights and
-##  limitations under the License.
-##
-##  The Original Code is RabbitMQ.
-##
-##  The Initial Developer of the Original Code is GoPivotal, Inc.
-##  Copyright (c) 2007-2014 GoPivotal, Inc.  All rights reserved.
-##
 
 APP=navicc-server
+USER=navicc
 LOG=/var/log/$APP
 export HOME=/var/lib/$APP
-
 
 export NL="
 "
 export RELX_REPLACE_OS_VARS=1   # Expand vars in config
 export RUNNER_LOG_DIR=$LOG
-# export VMARGS_PATH=$HOME/vm.args
-# export CONFIG_PATH=$HOME/sys.config
-export VMARGS_PATH=/etc/$APP/vm.args
-export CONFIG_PATH=/etc/$APP/sys.config
+cp -f /etc/$APP/vm.args $HOME/vm.args
+cp -f /etc/$APP/sys.config $HOME/sys.config
+export VMARGS_PATH=$HOME/vm.args
+export CONFIG_PATH=$HOME/sys.config
+# export VMARGS_PATH=/etc/$APP/vm.args
+# export CONFIG_PATH=/etc/$APP/sys.config
 
 # save hostname
 export FQDN=$(hostname -f)
 
-echo "Exec: `dirname $0`/$APP $@"
-exec `dirname $0`/$APP $@
+# Escape spaces and quotes, because shell is revolting.
+for arg in "$@" ; do
+	# Escape quotes in parameters, so that they're passed through cleanly.
+	arg=$(sed -e 's/"/\\"/g' <<-END
+		$arg
+		END
+	)
+	CMDLINE="${CMDLINE} \"${arg}\""
+done
+
+cd /var/lib/$APP
+
+# mkdir -m /usr/lib/navicc-server/stats
+
+SCRIPT=`basename $0`
+
+if [ `id -u` = `id -u ${USER}` -a "$SCRIPT" = "${APP}" ] ; then
+	echo "CMDLINE: ${CMDLINE}"
+	echo "SCRIPTNAME: ${SCRIPT}"
+	# echo "Exec: `dirname $0`/$APP $@"
+	/usr/lib/${APP}/bin/${APP} "$@"  > "${LOG}/startup_log" 2> "${LOG}/startup_err"
+	# echo "/usr/lib/${APP}/bin/${APP} \"$@\"  > \"${LOG}/startup_log\" 2> \"${LOG}/startup_err\""
+elif [ `id -u` = 0 ] ; then
+	echo "Run as ${USER}:"
+	su ${USER} -s /bin/sh -c "/usr/lib/${APP}/bin/${SCRIPT} ${CMDLINE}"
+	# echo "su ${USER} -s /bin/sh -c \"/usr/lib/${APP}/bin/${SCRIPT} ${CMDLINE}\""
+else
+	# /usr/lib/$APP/bin/$APP
+	echo
+	echo "Only root or ${USER} should run ${SCRIPT}"
+	echo
+	exit 1
+fi
+
+# exec `dirname $0`/$APP $@
 
 exit 0
 

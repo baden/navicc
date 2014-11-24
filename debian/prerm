@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+if [ -x "/etc/init.d/navicc-server" ]; then
+	# invoke-rc.d navicc-server stop || exit $?
+	invoke-rc.d navicc-server stop
+	# Kill epmd
+	# epmd -kill
+	if getent passwd navicc >/dev/null; then
+		# Shop epmd if run by the navicc user
+		killall -u navicc
+		# pkill -u navicc epmd || :
+	fi
+fi

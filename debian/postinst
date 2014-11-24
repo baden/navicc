@@ -2,30 +2,34 @@
 
 set -e
 
-PROJECT=navicc
-DESCRIPTION="GPS Tracking"
+APP=navicc-server
+USER=navicc
+GROUP=navicc
+DESCRIPTION="GPS Tracking server"
 
 # create group
-if ! getent group $PROJECT >/dev/null; then
-        addgroup --system $PROJECT
+if ! getent group $GROUP >/dev/null; then
+        addgroup --system $GROUP
 fi
 
 # create user
-if ! getent passwd $PROJECT >/dev/null; then
-        adduser --ingroup $PROJECT --home /opt/$PROJECT --disabled-password \
+if ! getent passwd $USER >/dev/null; then
+        adduser --ingroup $GROUP --home /var/lib/$APP --disabled-password \
 		--system --shell /bin/sh \
-		--gecos "$DESCRIPTION" $PROJECT
+		--gecos "$DESCRIPTION" $USER
 fi
 
-chown -R $PROJECT:$PROJECT /opt/$PROJECT
-chown -R $PROJECT:$PROJECT /var/lib/$PROJECT
-chown -R $PROJECT:$PROJECT /var/log/$PROJECT
+# chown -R $USER:$GROUP /opt/$PROJECT
+mkdir -p /var/lib/$APP/stats
+mkdir -p /var/lib/$APP/mnesia
+chown -R $USER:$GROUP /var/lib/$APP
+chown -R $USER:$GROUP /var/log/$APP
 
 case "$1" in
     configure)
-        if [ -x "/etc/init.d/$PROJECT" ]; then
-                update-rc.d $PROJECT defaults >/dev/null || exit $?
-        fi
+        # if [ -x "/etc/init.d/$APP" ]; then
+        #         update-rc.d $APP defaults >/dev/null || exit $?
+        # fi
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
@@ -36,6 +40,11 @@ case "$1" in
     ;;
 esac
 
+if [ -x "/etc/init.d/navicc-server" ]; then
+    # invoke-rc.d navicc-server stop || exit $?
+    update-rc.d $APP defaults >/dev/null
+    invoke-rc.d $APP start || exit $?
+fi
 #DEBHELPER#
 
 exit 0

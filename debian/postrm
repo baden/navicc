@@ -1,33 +1,36 @@
 #!/bin/sh
 
-PROJECT=navicc
+APP=navicc-server
+USER=navicc
+GROUP=navicc
 
 case "$1" in
     purge)
-        update-rc.d $PROJECT remove >/dev/null
-        if [ -d /var/log/$PROJECT ]; then
-                rm -r /var/log/$PROJECT
+        update-rc.d $APP remove >/dev/null
+        if [ -d /var/log/$APP ]; then
+                rm -r /var/log/$APP
         fi
-        if [ -d /var/lib/$PROJECT ]; then
-                rm -r /var/lib/$PROJECT
+        if [ -d /var/lib/$APP ]; then
+                rm -r /var/lib/$APP
         fi
-        if [ -d /etc/$PROJECT ]; then
-                rm -r /etc/$PROJECT
+        if [ -d /etc/$APP ]; then
+                rm -r /etc/$APP
         fi
-        if [ -e /etc/init.d/$PROJECT ]; then
-                rm  /etc/init.d/$PROJECT
-        fi
-
-        if getent passwd $PROJECT >/dev/null; then
-                deluser $PROJECT
-        fi
-        if getent group $PROJECT >/dev/null; then
-                delgroup $PROJECT
+        if [ -e /etc/init.d/$APP ]; then
+                rm  /etc/init.d/$APP
         fi
 
-        if [ -d /opt/$PROJECT ]; then
-                rm -r /opt/$PROJECT
+        if getent passwd $USER >/dev/null; then
+                deluser $USER
         fi
+        if getent group $GROUP >/dev/null; then
+                delgroup $GROUP
+        fi
+
+        update-rc.d $APP remove >/dev/null
+        # if [ -d /opt/$PROJECT ]; then
+        #         rm -r /opt/$PROJECT
+        # fi
     ;;
 
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
@@ -38,6 +41,7 @@ case "$1" in
         exit 1
     ;;
 esac
+
 
 #DEBHELPER#
 
