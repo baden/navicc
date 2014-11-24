@@ -18,17 +18,17 @@ notifications:
   - baden.i.ua@gmail.com
 services:
   - mongodb
+before_deploy:
+  - make deb
+  - ls deploy
 deploy:
   provider: releases
   api_key:
     secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
-  file: "deploy/*.deb"
+  file: "deploy/navicc-server_`git describe --tags --long`_amd64.deb"
   skip_cleanup: true
   on:
     repo: baden/navicc
     all_branches: true
     tags: true
-before_deploy:
-  - make deb
-  - ls deploy
 after_deploy: "echo 'after deploy'"
