@@ -8,7 +8,9 @@ GROUP=navicc
 DESCRIPTION="GPS Tracking server"
 
 config_nginx() {
-  ln -s /etc/nginx/sites-available/$APP /etc/nginx/sites-enabled/$APP
+  if [ ! -x "/etc/nginx/sites-enabled/$APP" ]; then
+    ln -s /etc/nginx/sites-available/$APP /etc/nginx/sites-enabled/$APP
+  fi
 }
 
 # create group

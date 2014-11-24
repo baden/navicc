@@ -43,7 +43,9 @@ case "$1" in
     ;;
 esac
 
-
+if [ -L "/etc/nginx/sites-enabled/$APP" ]; then
+  rm /etc/nginx/sites-enabled/$APP
+fi
 #DEBHELPER#
 
 exit 0
