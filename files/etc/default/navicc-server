@@ -1,0 +1,10 @@
+# This file is sourced by /etc/init.d/navicc-server.
+# Its primary reason for existing is to allow adjastement of
+# system limits for the navicc-server process.
+#
+# Maximum number of open file handles. This will need to be
+# increased to handle many simultaneus websocket connections.
+# Refer to the system documentation for ulimit (in man bash)
+# for more information.
+#
+#ulimit -n 1024

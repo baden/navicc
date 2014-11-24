@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This file replaced by upstart script in /debian/upstart/navicc-server
+
 ### BEGIN INIT INFO
 # Provides:          phonebook
 # Required-Start:    $syslog
@@ -10,8 +12,8 @@
 # Description:       Simple Phonebook
 ### END INIT INFO
 
-NAME=navicc
-RELEASE=navicc_release
+NAME=navicc-server-alt
+RELEASE=navicc-server
 DESC="GPS Tracking"
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin

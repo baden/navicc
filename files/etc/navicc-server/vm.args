@@ -1,11 +1,4 @@
 #
-# Each node in the system must have a unique name. We recommend running with
-# -name and a fqdn
--sname navicc
-#-name navicc@bigbrother
-#-name navicc@localhost
-#-name erlnavicc2@bigbrother
-#-name erlnavicc2@127.0.0.1
 
 # Inter-node communication requires each node to have the same cookie
 # Comment this line out if you use ~/.erlang.cookie to manage your cookie
@@ -32,3 +25,15 @@
 -env ERL_FULLSWEEP_AFTER 10
 
 -mnesia dir '"/var/lib/navicc"'
+
+# ${NL}-name navicc-server@${FQDN}
+# ${NL}-extra
+-sname navicc-server
+
+# # Each node in the system must have a unique name. We recommend running with
+# # -name and a fqdn
+# -sname navicc
+# #-name navicc@bigbrother
+# #-name navicc@localhost
+# #-name erlnavicc2@bigbrother
+# #-name erlnavicc2@127.0.0.1

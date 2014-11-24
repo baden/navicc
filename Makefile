@@ -7,6 +7,18 @@ PACKAGE_DIR = $(CURDIR)/build
 
 server="ubuntu@192.168.0.102"
 
+$(eval RELEASE_NAME := $(shell \
+	grep -E '^[^%]*{release,.*' relx.config | \
+	grep -o ' {.*, "' | \
+	grep -o '[^ {,"]*'))
+
+RELEASE_VER := `git describe --tags --long`
+# $(eval RELEASE_VER := $(shell \
+# 	grep -E '^[^%]*{navicc_release,[[:space:]]*".*"' relx.config | \
+# 	grep -o '".*"' | \
+# 	grep -o '[^\"]*'))
+
+
 # Options.
 # -Werror
 ERLC_OPTS ?= +debug_info +warn_export_all +warn_export_vars \
@@ -38,7 +50,8 @@ dep_navistats = git git://github.com/baden/navistats.git master
 
 # RELX_OPTS = -o rel release tar
 # RELX_OUTPUT_DIR = rel
-RELX_OPTS = -o _rel release tar
+# RELX_OPTS = -o build/_rel release tar
+RELX_OUTPUT_DIR = $(PACKAGE_DIR)/usr/lib
 
 include erlang.mk
 
@@ -48,53 +61,66 @@ test-shell: app
 	erl -pa ebin -pa deps/*/ebin -pa test -s navicc -config test/test.config
 
 run: rel
-	./_rel/navicc_release/bin/navicc_release console
+	$(PACKAGE_DIR)/usr/lib/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
 
 observer:
 	erl -sname test -setcookie 123 -s observer
 
-$(eval RELEASE_NAME := $(shell \
-	grep -E '^[^%]*{release,.*' relx.config | \
-	grep -o ' {.*, "' | \
-	grep -o '[^ {,"]*'))
-$(eval RELEASE_VER := $(shell \
-	grep -E '^[^%]*{navicc_release,[[:space:]]*".*"' relx.config | \
-	grep -o '".*"' | \
-	grep -o '[^\"]*'))
 
-BUILD_DIR := $(CURDIR)/_rel/$(RELEASE_NAME)
+# BUILD_DIR := $(CURDIR)/_rel/$(RELEASE_NAME)
 
 deb:
 	@echo "Release: [$(RELEASE_NAME)] ver: [$(RELEASE_VER)]"
-	mkdir -p $(PACKAGE_DIR)/etc/init.d
-	mkdir -p $(PACKAGE_DIR)/etc/$(PROJECT)
+	cp -R $(CURDIR)/files/*   $(PACKAGE_DIR)/
+	# mkdir -p $(PACKAGE_DIR)/etc/init.d
+	# mkdir -p $(PACKAGE_DIR)/etc/$(PROJECT)
 
-	mkdir -p $(PACKAGE_DIR)/opt/$(PROJECT)
-	mkdir -p $(PACKAGE_DIR)/var/log/$(PROJECT)
-	# mnesia here
-	mkdir -p $(PACKAGE_DIR)/var/lib/$(PROJECT)
-
-	cp -R $(BUILD_DIR)/*   $(PACKAGE_DIR)/opt/$(PROJECT)
 	#
-	install -p -m 0755 $(CURDIR)/etc/init                $(PACKAGE_DIR)/etc/init.d/$(PROJECT)
+	# mkdir -p $(PACKAGE_DIR)/opt/$(PROJECT)
+
+	mkdir -p $(PACKAGE_DIR)/var/log/$(RELEASE_NAME)
+	# # mnesia here
+	mkdir -p $(PACKAGE_DIR)/var/lib/$(RELEASE_NAME)
 	#
-	# install -p -m 0755 $(BUILD_DIR)/bin/$(RELEASE_NAME)  $(PACKAGE_DIR)/usr/lib/$(PROJECT)/bin/$(PROJECT)
-	install -m644 $(CURDIR)/etc/sys.config            $(PACKAGE_DIR)/etc/$(PROJECT)/sys.config
-	install -m644 $(CURDIR)/etc/vm.args               $(PACKAGE_DIR)/etc/$(PROJECT)/vm.args
+	# cp -R $(BUILD_DIR)/*   $(PACKAGE_DIR)/opt/$(PROJECT)
+	# #
+	# # install -p -m 0755 $(CURDIR)/etc/init                $(PACKAGE_DIR)/etc/init.d/$(PROJECT)
+	# #
+	# # install -p -m 0755 $(BUILD_DIR)/bin/$(RELEASE_NAME)  $(PACKAGE_DIR)/usr/lib/$(PROJECT)/bin/$(PROJECT)
+	# install -m644 $(CURDIR)/etc/sys.config            $(PACKAGE_DIR)/etc/$(PROJECT)/sys.config
+	# install -m644 $(CURDIR)/etc/vm.args               $(PACKAGE_DIR)/etc/$(PROJECT)/vm.args
+	#
+	# # fpm -s dir -t deb -n $(RELEASE_NAME) -v $(RELEASE_VER) .=/opt/$(RELEASE_NAME)
+	# mkdir -p $(CURDIR)/deploy
 
-	# fpm -s dir -t deb -n $(RELEASE_NAME) -v $(RELEASE_VER) .=/opt/$(RELEASE_NAME)
-	mkdir -p $(CURDIR)/deploy
+	fpm -f -s dir -t deb \
+		-n $(RELEASE_NAME) \
+		--version $(RELEASE_VER) \
+		-a native \
+		--workdir       $(CURDIR)/debian \
+		--deb-upstart   $(CURDIR)/debian/upstart/$(RELEASE_NAME) \
+		--after-install $(CURDIR)/debian/postinst \
+		--after-remove  $(CURDIR)/debian/postrm \
+		-C $(PACKAGE_DIR) \
+		etc usr var
+	mv -f $(RELEASE_NAME)_$(RELEASE_VER)_amd64.deb deploy/
+	# fpm -s dir -t deb -f -n $(RELEASE_NAME) -v $(RELEASE_VER) \
+	# fpm -s dir -t deb -f -n $(RELEASE_NAME) \
+	# 	--version `git describe --tags --long` \
+	# 	--workdir debian \
+	# 	# -p deploy/$(RELEASE_NAME)_$(RELEASE_VER)_amd64.deb \
+	# 	--after-install $(CURDIR)/etc/debian/postinst \
+	# 	--after-remove  $(CURDIR)/etc/debian/postrm \
+	# 	--deb-upstart debian/upstart/navicc \
+	# 	--config-files /etc/$(PROJECT)/sys.config \
+	# 	--config-files /etc/$(PROJECT)/vm.args \
+	# 	--deb-pre-depends adduser \
+	# 	--description $(DESCRIPTION) \
+	# 	-a native --url $(HOMEPAGE) \
+	# 	-C $(PACKAGE_DIR) etc opt var
 
-	fpm -s dir -t deb -f -n $(RELEASE_NAME) -v $(RELEASE_VER) \
-		-p deploy/$(RELEASE_NAME)_$(RELEASE_VER)_amd64.deb \
-		--after-install $(CURDIR)/etc/postinst \
-		--after-remove  $(CURDIR)/etc/postrm \
-		--config-files /etc/$(PROJECT)/sys.config \
-		--config-files /etc/$(PROJECT)/vm.args \
-		--deb-pre-depends adduser \
-		--description $(DESCRIPTION) \
-		-a native --url $(HOMEPAGE) \
-		-C $(PACKAGE_DIR) etc opt var
+distclean-deb:
+	$(gen_verbose) rm -f $(PACKAGE_DIR)
 
 publish:
 	# @ssh $(server) "mkdir -p navicc" && scp rel/$(RELEASE_NAME)/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz $(server):~/navicc/

@@ -1,0 +1,12 @@
+/var/log/navicc/*.log {
+        weekly
+        missingok
+        rotate 20
+        compress
+        delaycompress
+        notifempty
+        sharedscripts
+        postrotate
+            /etc/init.d/navicc-server rotate-logs > /dev/null
+        endscript
+}
