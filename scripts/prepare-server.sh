@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ ! `id -u` = 0 ] ; then
+    echo "Please start the script with ROOT"
+    exit
+fi
+
 # Settings:
 user=navicc
 nginx=stable
@@ -7,7 +12,7 @@ nginx=stable
 # Common
 
 # Set the debconf frontend to Noninteractive
-echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 # apt-get install mc gcc python-setuptools -y
 
@@ -15,9 +20,9 @@ echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 add-apt-repository ppa:nginx/$nginx -y
 apt-get update
-apt-get install nginx -y
-service nginx start
-update-rc.d nginx defaults
+DEBIAN_FRONTEND=noninteractive apt-get install nginx -y
+# service nginx start
+# update-rc.d nginx defaults
 
 # Cyrillic
 
@@ -38,18 +43,18 @@ update-rc.d nginx defaults
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 apt-get update
-apt-get install -y mongodb-org
-service mongod start
-update-rc.d mongod defaults
+DEBIAN_FRONTEND=noninteractive apt-get install mongodb-org -y
+# service mongod start
+# update-rc.d mongod defaults
 # TODO: Disable external connection
 
-# Erlang
+# Erlang (наверное не нужно, проект уже содержит все для запуска)
 
-wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-dpkg -i erlang-solutions_1.0_all.deb
-apt-get update
-apt-get install erlang -y
+# wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+# dpkg -i erlang-solutions_1.0_all.deb
+# apt-get update
+# DEBIAN_FRONTEND=noninteractive apt-get install erlang -y
 
 
-echo "Copy ssh-key by: ssh-copy-id $user@`hostname`"
-echo "If used alternale port, use (quotes is needed): ssh-copy-id '-p 443 user@server'"
+# echo "Copy ssh-key by: ssh-copy-id $user@`hostname`"
+# echo "If used alternale port, use (quotes is needed): ssh-copy-id '-p 443 user@server'"

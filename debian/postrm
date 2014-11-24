@@ -16,6 +16,7 @@ case "$1" in
         if [ -d /etc/$APP ]; then
                 rm -r /etc/$APP
         fi
+
         if [ -e /etc/init.d/$APP ]; then
                 rm  /etc/init.d/$APP
         fi
