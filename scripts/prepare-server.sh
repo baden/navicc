@@ -14,7 +14,8 @@ nginx=stable
 # Set the debconf frontend to Noninteractive
 # echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
-# apt-get install mc gcc python-setuptools -y
+#apt-get install mc gcc python-setuptools -y
+apt-get install software-properties-common python-software-properties
 
 # Nginx
 
@@ -58,3 +59,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install mongodb-org -y
 
 # echo "Copy ssh-key by: ssh-copy-id $user@`hostname`"
 # echo "If used alternale port, use (quotes is needed): ssh-copy-id '-p 443 user@server'"
+
+
+wget https://github.com/baden/navicc/releases/download/0.0.2/navicc-server_0.0.2_amd64.deb

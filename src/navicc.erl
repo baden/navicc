@@ -21,7 +21,7 @@ start_link() ->
 start() ->
     application:load(navicc),
 
-    {ok, Apps} = application:get_key(erlnavicc, applications),
+    {ok, Apps} = application:get_key(navicc, applications),
     [startit(App) || App <- Apps],
 
     ok = application:start(navicc),

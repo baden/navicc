@@ -66,6 +66,9 @@ include erlang.mk
 test-shell: app
 	erl -pa ebin -pa deps/*/ebin -pa test -s navicc -config test/test.config
 
+test-local: app
+	erl -pa ebin -pa deps/*/ebin -pa test -s navicc -config test/local.config
+
 run: rel
 	$(PACKAGE_DIR)/usr/lib/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
 
