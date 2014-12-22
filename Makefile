@@ -42,7 +42,7 @@ CT_OPTS +=  -spec test.spec \
 # Dependencies.
 
 # bear not got automaticaly by folsom, bug?
-DEPS = lager naviapi navipoint naviws navistats
+DEPS = lager naviapi navipoint naviws navistats recon
 # TEST_DEPS = ct_helper gun
 
 TEST_DEPS = gun
@@ -52,6 +52,7 @@ dep_naviapi = git git://github.com/baden/naviapi.git master
 dep_navipoint = git git://github.com/baden/navipoint.git master
 dep_naviws = git git://github.com/baden/naviws.git master
 dep_navistats = git git://github.com/baden/navistats.git master
+dep_recon = git git://github.com/ferd/recon.git master
 
 
 # RELX_OPTS = -o rel release tar
