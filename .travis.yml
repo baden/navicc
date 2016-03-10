@@ -25,6 +25,9 @@ deploy:
   api_key:
     secure: mify/tTT8pJG9zIoS7AglSKhR89LbzQHoS8hsgUljn4BR0hqJUymWQvxJlZTJ//T15dlQ/38AP6fNiG6qu2pdpQdrQZRNrBF3ZvZyrbltvqDyMCAMAYGxkFvBa9SVCAwVvB/VyByq+YM0v1Zrq8in5xv5LDunWXzKtRwmzOG4k8=
   file: deploy/navicc-server_${TRAVIS_TAG}_amd64.deb
+  skip_cleanup: true
   on:
     repo: baden/navicc
+    all_branches: true
+    tags: true
 after_deploy: echo 'after deploy'
