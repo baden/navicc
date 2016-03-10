@@ -21,3 +21,5 @@ deploy/
 relx
 doc
 stats/
+navicc.d
+.erlang.mk
