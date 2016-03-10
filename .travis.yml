@@ -1,38 +1,30 @@
 language: erlang
 otp_release: 17.3
 before_install:
-  - echo $TRAVIS_BRANCH
-  - echo $TRAVIS_TAG
-  - echo $env.CI_DEPLOY_USERNAME
-  # - sudo apt-get install git-buildpackage
+- echo $TRAVIS_BRANCH
+- echo $TRAVIS_TAG
+- echo $env.CI_DEPLOY_USERNAME
 install:
-  # - sh -c "if ! [ -z '$TRAVIS_TAG' ]; then sudo apt-get install ruby-dev rubygems; gem install fpm; fi"
-  # - sudo apt-get install ruby-dev rubygems
-  - gem install fpm
+- gem install fpm
 script:
-  # - sh -c "echo "TRAVIS_TAG=[$TRAVIS_TAG]" && if [ -z '$TRAVIS_TAG' ]; then make tests; else make tests rel; fi"
-  - echo "TRAVIS_TAG=[$TRAVIS_TAG]"
-  - uname -a
-  - make tests
+- echo "TRAVIS_TAG=[$TRAVIS_TAG]"
+- uname -a
+- make tests
 after_success:
-  - make rel
+- make rel
 notifications:
   email:
   - baden.i.ua@gmail.com
 services:
-  - mongodb
+- mongodb
 before_deploy:
-  - make deb
-  - ls deploy
+- make deb
+- ls deploy
 deploy:
   provider: releases
   api_key:
-    secure: Tei4LYVDPenLotEavQsPzcNYAqpWpx15mpmLf/YqB2G/NfWxSCbpHIvlYw0MrlcLr/lZM8qFNIkJGv+mLZZtIzxiJohxuCHZp9/qh8e2BiYnjiylfM9XhNxgStdi8wcwAiBXKYpNwA9IJn/mx3DNyNGID1ba4v57ztd+qZiWEvE=
-  # file: "deploy/navicc-server_`git describe --tags --long`_amd64.deb"
+    secure: mify/tTT8pJG9zIoS7AglSKhR89LbzQHoS8hsgUljn4BR0hqJUymWQvxJlZTJ//T15dlQ/38AP6fNiG6qu2pdpQdrQZRNrBF3ZvZyrbltvqDyMCAMAYGxkFvBa9SVCAwVvB/VyByq+YM0v1Zrq8in5xv5LDunWXzKtRwmzOG4k8=
   file: deploy/navicc-server_${TRAVIS_TAG}_amd64.deb
-  skip_cleanup: true
   on:
     repo: baden/navicc
-    all_branches: true
-    tags: true
-after_deploy: "echo 'after deploy'"
+after_deploy: echo 'after deploy'
