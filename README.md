@@ -9,6 +9,11 @@ GPS tracker server for new.navi.cc project.
 
     make
 
+#### Install and start MongoDB
+
+    mkdir mongo-db
+    mongod --dbpath=`pwd`/mongo-db
+
 #### To test the project:
 
     make tests
