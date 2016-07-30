@@ -5,7 +5,7 @@ DESCRIPTION = "GPS Tracking"
 HOMEPAGE = "http://new.navi.cc/"
 PACKAGE_DIR = $(CURDIR)/build
 
-server="ubuntu@192.168.0.101"
+server = "ubuntu@192.168.0.101"
 
 $(eval RELEASE_NAME := $(shell \
 	grep -E '^[^%]*{release,.*' relx.config | \
@@ -13,10 +13,12 @@ $(eval RELEASE_NAME := $(shell \
 	grep -o '[^ {,"]*'))
 
 ifdef TRAVIS_TAG
-RELEASE_VER=$(TRAVIS_TAG)
+RELEASE_VER := $(TRAVIS_TAG)
 else
 # RELEASE_VER:=`git describe --tags HEAD`
-RELEASE_VER:=`git describe --tags --long HEAD`
+$(eval RELEASE_VER := $(shell \
+	git describe --tags --long HEAD \
+))
 endif
 
 # $(eval RELEASE_VER := $(shell \
@@ -78,6 +80,8 @@ observer:
 
 
 # BUILD_DIR := $(CURDIR)/_rel/$(RELEASE_NAME)
+
+DEB_FILENAME := $(RELEASE_NAME)_$(RELEASE_VER)_amd64.deb
 
 deb:
 	@echo "Release: [$(RELEASE_NAME)] ver: [$(RELEASE_VER)]"
@@ -141,3 +145,14 @@ distclean:: distclean-deb
 publish:
 	# @ssh $(server) "mkdir -p navicc" && scp rel/$(RELEASE_NAME)/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz $(server):~/navicc/
 	scp deploy/*.deb $(server):~
+
+DOCKER_NAME := navicc
+DOCKER_TAG := latest
+DOCKER_FILE := deploy/Dockerfile
+
+$(DOCKER_FILE): Dockerfile.dist
+	@sed -e 's/{DEB_FILENAME}/$(DEB_FILENAME)/g' $< >$@
+
+docker-build: $(DOCKER_FILE) #deploy/$(DEB_FILENAME)
+	cd deploy
+	docker build -t $(DOCKER_NAME):$(DOCKER_TAG) .

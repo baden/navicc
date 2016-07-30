@@ -1,0 +1,6 @@
+FROM ubuntu
+MAINTAINER baden.i.ua@gmail.com
+
+COPY {DEB_FILENAME} /
+
+RUN dpkg -i {DEB_FILENAME}
