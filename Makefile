@@ -7,6 +7,17 @@ PACKAGE_DIR = $(CURDIR)/build
 
 server = "ubuntu@192.168.0.101"
 
+NAME=$(shell erl -noshell -eval "{ok, RelConf} = file:consult(\"relx.config\"), {release, {Name, _}, _} = hd(RelConf), io:format(Name), halt(0)")
+VSN=$(shell erl -noshell -eval "{ok, RelConf} = file:consult(\"relx.config\"), {release, {_, Vsn}, _} = hd(RelConf), io:format(Vsn), halt(0)")
+
+#
+# use this like:
+# 'make print-PATH print-CFLAGS make print-ALL_OBJS'
+# to see the value of make variable PATH and CFLAGS, ALL_OBJS, etc.
+#
+print-%:
+	@echo $* is $($*)
+
 $(eval RELEASE_NAME := $(shell \
 	grep -E '^[^%]*{release,.*' relx.config | \
 	grep -o ' {.*, "' | \

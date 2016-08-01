@@ -23,6 +23,19 @@ curl -v localhost:8981/info
 curl -v localhost:8982/1.0/info
 ```
 
+You can start without access to host network (better way):
+
+```
+docker run -dti --name app1 --link mongo navicc
+```
+
+```
+export GUEST=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' app1)
+curl -v $GUEST:8981/info
+curl -v $GUEST:8982/1.0/info
+
+```
+
 Logs:
 
 ```
@@ -51,6 +64,18 @@ docker start app1
 #docker run -it --rm --link mongo -p 8981:8981 -p 8982:8982 -p 8983:8983 navicc
 ```
 
+Stop and remove:
+
+```
+docker rm $(docker stop app1)
+```
+
+Stop and remove mongo container:
+
+```
+docker rm $(docker stop mongo)
+```
+
 ## Usefull things
 
 Connect to container's mongo database:
@@ -64,6 +89,16 @@ docker run -it --rm --link mongo mongo mongo --host mongo
 You can run container direct from
 [DockerHUB](https://hub.docker.com/r/baden/navicc/)
 anywhere using baden/navicc tag name.
+
+```
+docker run -dti --name app1 --link mongo -p 8981:8981 -p 8982:8982 -p 8983:8983 baden/navicc
+```
+
+Update local copy after update copy on hub:
+
+```
+docker pull baden/navicc
+```
 
 ----------------------------
 
