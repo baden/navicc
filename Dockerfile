@@ -21,7 +21,7 @@ EXPOSE 8981
 EXPOSE 8982
 EXPOSE 8983
 
-# ENTRYPOINT _rel/navicc-server/bin/navicc-server foreground
+ENTRYPOINT _rel/navicc-server/bin/navicc-server console
 # CMD ["_rel/navicc-server/bin/navicc-server", "foreground"]
 CMD ["/app/_rel/navicc-server/bin/navicc-server", "console"]
 # CMD ["bash"]

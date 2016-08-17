@@ -1,26 +1,25 @@
 version: '2'
 
-# networks:
-#   bridge-tier:
-#     driver: bridge
-networks:
-  front:
-    driver: bridge
-
 services:
-  redis:
-    image: redis
+  # redis:
+  #   image: redis
 
   mongo:
     image: mongo
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
 
   app:
     # image: baden-navicc
     build: .
+    tty: true
     links:
       - "mongo:mongo"
+    depends_on:
+      - mongo
+    # entrypoint:
+    #   - _rel/navicc-server/bin/navicc-server
+    #   - console
     # expose:
     #   - "8981"
     #   - "8982"
@@ -30,21 +29,18 @@ services:
       - "8982:8982"
       - "8983:8983"
 
-  bash:
-    image: baden/debian
-    links:
-      - "mongo:mongo"
-      - "app:app"
-    ports:
-      - "127.0.0.1:8000:8000"
-    expose:
-      - "8000"
-    # network_mode: "host"
-    networks:
-      - front
-
-  erlang:
-    image: baden/erlang
-    links:
-      - "mongo:mongo"
-      - "app:app"
+  # bash:
+  #   image: baden/debian
+  #   links:
+  #     - "mongo:mongo"
+  #     - "app:app"
+  #   ports:
+  #     - "8000:8000"
+  #   # expose:
+  #   #   - "8000"
+  #
+  # erlang:
+  #   image: baden/erlang
+  #   links:
+  #     - "mongo:mongo"
+  #     - "app:app"

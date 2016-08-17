@@ -76,6 +76,24 @@ Stop and remove mongo container:
 docker rm $(docker stop mongo)
 ```
 
+## Docker-compose (easest way)
+
+```
+docker-compose build
+docker-compose up -d
+```
+
+Open page:
+
+http://localhost:8981/info
+
+Stop & remove:
+
+```
+docker-compose stop
+docker-compose rm -f
+```
+
 ## Usefull things
 
 Connect to container's mongo database:
