@@ -191,6 +191,7 @@ tarball: rel
 	@echo "Commit by git: [$(GIT2_COMMIT)] by travis/commit: [$(TRAVIS_COMMIT)] travis/tag: [$(TRAVIS_TAG)]"
 	@echo "Tar file: [$(TAR_FILE_ABS)]"
 	cd _rel; \
+	mkdir -p $(dir $(TAR_FILE_ABS)); \
 	rm -f $(TAR_FILE_ABS); \
 	tar czf $(TAR_FILE_ABS) $(RELEASE_NAME)
 

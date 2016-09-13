@@ -21,11 +21,13 @@ services:
 before_deploy:
 - make tarball
 - ls deploy
+- export TAR_FILE=$(ls deploy/*.tar.gz)
 deploy:
   provider: releases
   api_key:
     secure: mify/tTT8pJG9zIoS7AglSKhR89LbzQHoS8hsgUljn4BR0hqJUymWQvxJlZTJ//T15dlQ/38AP6fNiG6qu2pdpQdrQZRNrBF3ZvZyrbltvqDyMCAMAYGxkFvBa9SVCAwVvB/VyByq+YM0v1Zrq8in5xv5LDunWXzKtRwmzOG4k8=
   file: deploy/*.tar.gz
+  # file: "${TAR_FILE}"
   skip_cleanup: true
   on:
     repo: baden/navicc
