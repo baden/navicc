@@ -22,6 +22,7 @@ before_deploy:
 - make tarball
 - ls deploy
 - export TAR_FILE=$(ls deploy/*.tar.gz)
+- echo "TAR_FILE=${TAR_FILE}"
 deploy:
   provider: releases
   api_key:
