@@ -11,12 +11,21 @@ $(eval RELEASE_NAME := $(shell \
 	grep -o ' {.*, "' | \
 	grep -o '[^ {,"]*'))
 
-ifdef TRAVIS_TAG
-RELEASE_VER=$(TRAVIS_TAG)
-else
-# RELEASE_VER:=`git describe --tags HEAD`
-RELEASE_VER:=$(shell git describe --tags --long HEAD)
+
+GIT_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
+ifdef TRAVIS_BRANCH
+  GIT_BRANCH = $(TRAVIS_BRANCH)
 endif
+
+GIT_COMMIT = $(shell git describe --tags --always --dirty=-wip | cut -d- -f1,2,4,5 | sed 's/-/./')
+ifdef TRAVIS_COMMIT
+  GIT_COMMIT=$(TRAVIS_COMMIT)
+endif
+ifdef TRAVIS_TAG
+  GIT_COMMIT=$(TRAVIS_TAG)
+endif
+
+RELEASE_VER := $(GIT_BRANCH)-$(GIT_COMMIT)
 
 #
 # use this like:
@@ -173,9 +182,17 @@ deb:
 TAR_FILE = deploy/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz
 TAR_FILE_ABS = $(abspath $(TAR_FILE))
 
+
+GIT2_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
+GIT2_COMMIT = $(shell git describe --tags --always --dirty=-wip | cut -d- -f1,2,4,5 | sed 's/-/./')
+
 tarball: rel
+	@echo "Branch by git: [$(GIT2_BRANCH)] by travis: [$(TRAVIS_BRANCH)]"
+	@echo "Commit by git: [$(GIT2_COMMIT)] by travis/commit: [$(TRAVIS_COMMIT)] travis/tag: [$(TRAVIS_TAG)]"
+	@echo "Tar file: [$(TAR_FILE_ABS)]"
 	cd _rel; \
-	tar cvzf $(TAR_FILE) $(RELEASE_NAME)
+	rm -f $(TAR_FILE_ABS); \
+	tar czf $(TAR_FILE_ABS) $(RELEASE_NAME)
 
 distclean-deb:
 	$(gen_verbose) rm -rf $(PACKAGE_DIR)

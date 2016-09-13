@@ -3,6 +3,7 @@ otp_release: 19.0
 before_install:
 - echo $TRAVIS_BRANCH
 - echo $TRAVIS_TAG
+- echo $TRAVIS_COMMIT
 - echo $env.CI_DEPLOY_USERNAME
 install:
 - gem install fpm
@@ -24,7 +25,7 @@ deploy:
   provider: releases
   api_key:
     secure: mify/tTT8pJG9zIoS7AglSKhR89LbzQHoS8hsgUljn4BR0hqJUymWQvxJlZTJ//T15dlQ/38AP6fNiG6qu2pdpQdrQZRNrBF3ZvZyrbltvqDyMCAMAYGxkFvBa9SVCAwVvB/VyByq+YM0v1Zrq8in5xv5LDunWXzKtRwmzOG4k8=
-  file: deploy/navicc-server-${TRAVIS_TAG}.tar.gz
+  file: deploy/*.tar.gz
   skip_cleanup: true
   on:
     repo: baden/navicc
