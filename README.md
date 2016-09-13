@@ -7,6 +7,14 @@ GPS tracker server for new.navi.cc project.
 
 Erlang versions supported: 17.1 and up
 
+## Project components
+
+* Сбор статистики - [navistats](https://github.com/baden/navistats)
+* Работа с базой данных - [navidb](https://github.com/baden/navidb)
+* Прием данных с трекеров - [navipoint](https://github.com/baden/navipoint)
+* API - [naviapi](https://github.com/baden/naviapi)
+* Дуплексный обмен для API - [naviws](https://github.com/baden/naviws)
+
 ## Dependencies
 
 ### Erlang
