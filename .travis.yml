@@ -9,7 +9,7 @@ install:
 script:
 - echo "TRAVIS_TAG=[$TRAVIS_TAG]"
 - uname -a
-- make tests
+- make elvis tests
 after_success:
 - make rel
 notifications:
