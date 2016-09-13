@@ -1,5 +1,5 @@
 language: erlang
-otp_release: 17.3
+otp_release: 19.0
 before_install:
 - echo $TRAVIS_BRANCH
 - echo $TRAVIS_TAG

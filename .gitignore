@@ -1,6 +1,11 @@
 .eunit
 deps
+/doc/*.html
+/doc/edoc-info
+/doc/erlang.png
+/doc/stylesheet.css
 *.o
+*.d
 *.beam
 *.plt
 erl_crash.dump
@@ -22,5 +27,7 @@ relx
 doc
 stats/
 navicc.d
-.erlang.mk
+.erlang.mk/
 mongo-db/
+xrefr
+elvis

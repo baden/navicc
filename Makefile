@@ -1,4 +1,5 @@
 # See LICENSE for licensing information.
+.SILENT:
 
 PROJECT = navicc
 DESCRIPTION = "GPS Tracking"
@@ -27,9 +28,15 @@ endif
 
 # Options.
 # -Werror
-ERLC_OPTS ?= +debug_info +warn_export_all +warn_export_vars \
-	+warn_shadow_vars +warn_obsolete_guard +warn_missing_spec \
-	+'{parse_transform, lager_transform}'
+# ERLC_OPTS ?= +debug_info +warn_export_all +warn_export_vars \
+# 	+warn_shadow_vars +warn_obsolete_guard +warn_missing_spec \
+# 	+'{parse_transform, lager_transform}'
+ERLC_OPTS := +warn_unused_vars +warn_export_all +warn_shadow_vars
+ERLC_OPTS += +warn_unused_import +warn_unused_function +warn_bif_clash
+ERLC_OPTS += +warn_unused_record +warn_deprecated_function +warn_obsolete_guard
+ERLC_OPTS += +strict_validation +warn_export_vars +warn_exported_vars
+ERLC_OPTS += +warn_missing_spec +warn_untyped_record +debug_info
+ERLC_OPTS += +'{parse_transform, lager_transform}'
 
 # COMPILE_FIRST = cowboy_middleware cowboy_sub_protocol
 CT_OPTS +=  -spec test.spec \
@@ -45,7 +52,7 @@ CT_OPTS +=  -spec test.spec \
 DEPS = lager naviapi navipoint naviws navistats recon
 # TEST_DEPS = ct_helper gun
 
-TEST_DEPS = gun
+TEST_DEPS = gun xref_runner
 # dep_ct_helper = git https://github.com/extend/ct_helper.git master
 
 dep_naviapi = git git://github.com/baden/naviapi.git master
@@ -60,6 +67,14 @@ dep_recon = git git://github.com/ferd/recon.git master
 # RELX_OPTS = -o build/_rel release tar
 RELX_OUTPUT_DIR = $(PACKAGE_DIR)/usr/lib
 
+BUILD_DEPS = elvis_mk
+DEP_PLUGINS = elvis_mk
+
+dep_elvis_mk = git https://github.com/inaka/elvis.mk.git 1.0.0
+
+EDOC_DIRS := ["src"]
+EDOC_OPTS := {preprocess, true}, {source_path, ${EDOC_DIRS}}, nopackages, {subpackages, true}
+
 include erlang.mk
 
 # Also dialyze the tests.
@@ -70,8 +85,8 @@ test-shell: app
 test-local: app
 	erl -pa ebin -pa deps/*/ebin -pa test -s navicc -config test/local.config
 
-run: rel
-	$(PACKAGE_DIR)/usr/lib/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
+# run: rel
+# 	$(PACKAGE_DIR)/usr/lib/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
 
 observer:
 	erl -sname test -setcookie 123 -s observer
