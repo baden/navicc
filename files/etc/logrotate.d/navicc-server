@@ -1,12 +1,12 @@
-/var/log/navicc/*.log {
-        weekly
+/var/log/nginx/navicc-server/*.log {
+        daily
         missingok
-        rotate 20
+        rotate 30
         compress
         delaycompress
         notifempty
         sharedscripts
         postrotate
-            /etc/init.d/navicc-server rotate-logs > /dev/null
+            [ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`
         endscript
 }

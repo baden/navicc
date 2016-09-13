@@ -18,16 +18,16 @@ notifications:
 services:
 - mongodb
 before_deploy:
-- make deb
+- make tarball
 - ls deploy
 deploy:
   provider: releases
   api_key:
     secure: mify/tTT8pJG9zIoS7AglSKhR89LbzQHoS8hsgUljn4BR0hqJUymWQvxJlZTJ//T15dlQ/38AP6fNiG6qu2pdpQdrQZRNrBF3ZvZyrbltvqDyMCAMAYGxkFvBa9SVCAwVvB/VyByq+YM0v1Zrq8in5xv5LDunWXzKtRwmzOG4k8=
-  file: deploy/navicc-server_${TRAVIS_TAG}_amd64.deb
+  file: deploy/navicc-server-${TRAVIS_TAG}.tar.gz
   skip_cleanup: true
   on:
     repo: baden/navicc
     all_branches: true
-    tags: true
+    # tags: true
 after_deploy: echo 'after deploy'

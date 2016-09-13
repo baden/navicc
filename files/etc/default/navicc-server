@@ -1,3 +1,4 @@
+#!/bin/sh
 # This file is sourced by /etc/init.d/navicc-server.
 # Its primary reason for existing is to allow adjastement of
 # system limits for the navicc-server process.
@@ -8,3 +9,8 @@
 # for more information.
 #
 #ulimit -n 1024
+
+#echo "TODO: need only for template server"
+
+# TBD
+#export ERLNAVICC_WS_PORT=8984

@@ -1,3 +1,7 @@
+log_format  navicc  '$remote_addr - [$time_local] "$request" '
+                  '$status ($body_bytes_sent) "$http_referer" '
+                  '"$http_user_agent" [$request_time $upstream_response_time] 1:$gzip_ratio ($cookie_access_token)';
+
 upstream navipoint {
     server 127.0.0.1:8981 fail_timeout=0;
 }
@@ -6,7 +10,72 @@ upstream naviapi {
     server 127.0.0.1:8982 fail_timeout=0;
 }
 
-# map $http_upgrade $connection_upgrade {
-#     default upgrade;
-#     ''      close;
-# }
+upstream naviws {
+    server 127.0.0.1:8984 fail_timeout=0;
+}
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    listen   80;
+
+    # server_name localhost;
+    server_name point.gps.baden.work;
+    server_name api.gps.baden.work;
+    server_name *.gps.baden.work;
+
+    expires -1; # yes no need caching
+
+    # API
+
+    location /1.0/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_redirect off;
+        proxy_pass http://naviapi;
+        access_log /var/log/nginx/navicc-server/api-access.log navicc;
+    }
+
+    # Point
+
+    location ~* ^/(info|addlog|bingps|config|params|firmware|addlog).* {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_redirect off;
+        proxy_pass http://naviccpoint;
+        access_log /var/log/nginx/navicc-server/point-access.log navicc;
+        # error_log /home/baden/SDK/newgps.navi.cc/logs/point2-access.log navicc2;
+    }
+
+    # Websocket
+
+    location /websocket {
+        proxy_pass http://erlnavicc_ws;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        access_log /var/log/nginx/navicc-server/ws-access.log navicc;
+    }
+
+    # UI (TBD)
+
+    # root /home/erlnavicc/www;
+    # index index.html index.htm;
+    #
+    # location / {
+    #     expires -1; # yes no need caching
+    #     # First attempt to serve request as file, then
+    #     # as directory, then fall back to index.html
+    #     #rewrite ^(.*)#.*$ $1;
+    #     try_files $uri $uri.html $uri/ /index.html;
+    #     access_log /var/log/nginx/newgps.navi.cc/WWW2-dev-access.log navicc;
+    # }
+
+}

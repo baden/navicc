@@ -1,0 +1,34 @@
+description "GPS tracking"
+author      "baden"
+
+# Ubuntu upstart file at /etc/init/erlnavicc.conf
+
+# Recommended ulimit values
+#
+limit fsize unlimited unlimited
+limit cpu unlimited unlimited
+limit as unlimited unlimited
+limit nofile 64000 64000
+limit rss unlimited unlimited
+limit nproc 64000 64000
+
+setuid navicc
+setgid navicc
+
+kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+respawn
+
+# required for erlang
+env HOME="/home/navicc"
+export HOME
+
+script
+
+  if [ -f /etc/default/navicc-server ]; then . /etc/default/navicc-server; fi
+
+  exec /home/navicc/navicc-server/_rel/navicc-server/bin/navicc-server foreground
+end script

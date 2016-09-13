@@ -31,11 +31,11 @@
 ## Tweak GC to run more often
 -env ERL_FULLSWEEP_AFTER 10
 
--mnesia dir '"${HOME}/mnesia"'
+-mnesia dir '"./mnesia"'
 
 # ${NL}-name navicc-server@${FQDN}
 # ${NL}-extra
--sname navicc-server
+#-sname navicc-server
 
 # # Each node in the system must have a unique name. We recommend running with
 # # -name and a fqdn
@@ -44,3 +44,4 @@
 # #-name navicc@localhost
 # #-name erlnavicc2@bigbrother
 # #-name erlnavicc2@127.0.0.1
+-name navicc@127.0.0.1

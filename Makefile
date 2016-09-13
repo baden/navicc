@@ -6,8 +6,6 @@ DESCRIPTION = "GPS Tracking"
 HOMEPAGE = "http://new.navi.cc/"
 PACKAGE_DIR = $(CURDIR)/build
 
-server="ubuntu@192.168.0.101"
-
 $(eval RELEASE_NAME := $(shell \
 	grep -E '^[^%]*{release,.*' relx.config | \
 	grep -o ' {.*, "' | \
@@ -17,8 +15,16 @@ ifdef TRAVIS_TAG
 RELEASE_VER=$(TRAVIS_TAG)
 else
 # RELEASE_VER:=`git describe --tags HEAD`
-RELEASE_VER:=`git describe --tags --long HEAD`
+RELEASE_VER:=$(shell git describe --tags --long HEAD)
 endif
+
+#
+# use this like:
+# 'make print-PATH print-CFLAGS make print-ALL_OBJS'
+# to see the value of make variable PATH and CFLAGS, ALL_OBJS, etc.
+#
+print-%:
+	@echo $* is $($*)
 
 # $(eval RELEASE_VER := $(shell \
 # 	grep -E '^[^%]*{navicc_release,[[:space:]]*".*"' relx.config | \
@@ -65,15 +71,32 @@ dep_recon = git git://github.com/ferd/recon.git master
 # RELX_OPTS = -o rel release tar
 # RELX_OUTPUT_DIR = rel
 # RELX_OPTS = -o build/_rel release tar
-RELX_OUTPUT_DIR = $(PACKAGE_DIR)/usr/lib
+# RELX_OUTPUT_DIR = $(PACKAGE_DIR)/usr/lib
 
 BUILD_DEPS = elvis_mk
 DEP_PLUGINS = elvis_mk
 
 dep_elvis_mk = git https://github.com/inaka/elvis.mk.git 1.0.0
 
+# BUILD_DEPS += rlx_prv_cmd
+
+dep_rlx_prv_cmd = git https://github.com/wmealing/rlx_prv_cmd.git 0.1.0
+
 EDOC_DIRS := ["src"]
 EDOC_OPTS := {preprocess, true}, {source_path, ${EDOC_DIRS}}, nopackages, {subpackages, true}
+
+
+# RLX_PRV_CMD ?= $(CURDIR)/rlx_prv_cmd.beam
+# RLX_PRV_CMD_URL ?= https://github.com/erlangninja/rlx_prv_cmd/releases/download/0.1.0/rlx_prv_cmd.beam
+# define get_rlx_prv_cmd
+# 	curl -s -L -o $(RLX_PRV_CMD) $(RLX_PRV_CMD_URL) || rm $(RLX_PRV_CMD)
+# endef
+# export RLX_PRV_CMD
+#
+# $(RLX_PRV_CMD):
+# 	@$(call get_rlx_prv_cmd)
+#
+# rel:: $(RLX_PRV_CMD)
 
 include erlang.mk
 
@@ -147,12 +170,23 @@ deb:
 # 	-a native --url $(HOMEPAGE) \
 # 	-C $(PACKAGE_DIR) etc opt var
 
+TAR_FILE = deploy/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz
+TAR_FILE_ABS = $(abspath $(TAR_FILE))
+
+tarball: rel
+	cd _rel; \
+	tar cvzf $(TAR_FILE) $(RELEASE_NAME)
+
 distclean-deb:
 	$(gen_verbose) rm -rf $(PACKAGE_DIR)
 	$(gen_verbose) rm -rf deploy/
 
 distclean:: distclean-deb
 
-publish:
+# server="ubuntu@192.168.0.101"
+
+publish-to-het2.baden.work:
+	cd _rel; \
+	rsync -avz -e ssh navicc-server baden@het2.baden.work:~/navicc-server/
 	# @ssh $(server) "mkdir -p navicc" && scp rel/$(RELEASE_NAME)/$(RELEASE_NAME)-$(RELEASE_VER).tar.gz $(server):~/navicc/
-	scp deploy/*.deb $(server):~
+	# scp deploy/*.deb $(server):~
