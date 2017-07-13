@@ -70,11 +70,11 @@ DEPS = lager naviapi navipoint naviws navistats recon
 TEST_DEPS = gun xref_runner
 # dep_ct_helper = git https://github.com/extend/ct_helper.git master
 
-dep_naviapi = git git://github.com/baden/naviapi.git master
-dep_navipoint = git git://github.com/baden/navipoint.git master
-dep_naviws = git git://github.com/baden/naviws.git master
-dep_navistats = git git://github.com/baden/navistats.git master
-dep_recon = git git://github.com/ferd/recon.git master
+dep_naviapi = git git://github.com/baden/naviapi.git refresh2017
+dep_navipoint = git git://github.com/baden/navipoint.git refresh2017
+dep_naviws = git git://github.com/baden/naviws.git refresh2017
+dep_navistats = git git://github.com/baden/navistats.git refresh2017
+# dep_recon = git git://github.com/ferd/recon.git master
 
 
 # RELX_OPTS = -o rel release tar

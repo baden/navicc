@@ -1,5 +1,5 @@
 language: erlang
-otp_release: 19.0
+otp_release: 20.0
 before_install:
 - echo $TRAVIS_BRANCH
 - echo $TRAVIS_TAG
@@ -17,7 +17,13 @@ notifications:
   email:
   - baden.i.ua@gmail.com
 services:
-- mongodb
+  - mongodb
+addons:
+  apt:
+    sources:
+    - mongodb-3.2-precise
+    packages:
+    - mongodb-org-server
 before_deploy:
 - make tarball
 - ls deploy
